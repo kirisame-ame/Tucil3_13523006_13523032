@@ -8,6 +8,7 @@ class RushSolverApplicationTests {
 
 	@Test
 	void contextLoads() {
+		
 	}
 
 }
