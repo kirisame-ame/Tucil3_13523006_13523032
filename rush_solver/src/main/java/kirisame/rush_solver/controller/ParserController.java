@@ -29,17 +29,20 @@ public class ParserController {
                     }
                     default -> {
                         if(lineCount == 3 && line.charAt(0) != 'K' && line.charAt(0) !=' ') {
+                            int offset = 1;
                             for (int i=0;i<Board.getInstance().getWidth();i++) {
                                 Board.getInstance().setBoardAt(0, i, '壁');
                                 try {
                                     char value = line.charAt(i);
-                                    value = Character.toUpperCase(value);
-                                    System.out.println(value);
-                                    Board.getInstance().setBoardAt(1, i,value);
+                                    if(i==0 && (value=='K'||value=='k'|| value==' ')){
+                                        Board.getInstance().setBoardAt(lineCount - 3, 0, '壁');
+                                        offset = 0;
+                                    }else{
+                                        value = Character.toUpperCase(value);
+                                    }
+                                    Board.getInstance().setBoardAt(1, i+offset,value);
                                 } catch (Exception e) {
-                                    Board.getInstance().setBoardAt(1, i,'壁');
                                 }
-                                
                             }
                             lineCount++;
                             break;
@@ -54,15 +57,19 @@ public class ParserController {
                             throw new IllegalArgumentException("Piece count exceeds the specified limit.");
                         }
                         for(int i=0;i<Board.getInstance().getWidth()-1;i++) {
+                            int offset = 1;
                             try {
                                 char value = line.charAt(i);
+                                if(i==0 && (value=='K'||value=='k'|| value==' ')){
+                                    Board.getInstance().setBoardAt(lineCount - 3, 0, '壁');
+                                    offset = 0;
+                                }
                                 // WIP IF K/EMPTY, no need i+1
                                 if(value>='a' && value<='Z') {
                                     value = Character.toUpperCase(value);
                                     if(value=='K'){
-                                        Board.getInstance().setEndGoal(lineCount - 3, i);
+                                        Board.getInstance().setEndGoal(lineCount - 3, i+offset);
                                     }
-                                    Board.getInstance().setBoardAt(lineCount - 3, 0, '壁');
                                     if(value!='K'&& value!='P'){
                                         if(pieceIds.add(value)){
                                             normalPieceCount++;
@@ -72,7 +79,7 @@ public class ParserController {
                                 if(value==' '){
                                     value = '壁';
                                 }
-                                Board.getInstance().setBoardAt(lineCount - 3, i+1, value);
+                                Board.getInstance().setBoardAt(lineCount - 3, i+offset, value);
                             } catch (Exception e) {
                             }
                             
@@ -83,5 +90,4 @@ public class ParserController {
         } catch (IOException e) {
         }
     }
-    
 }
