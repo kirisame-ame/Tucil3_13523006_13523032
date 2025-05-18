@@ -66,6 +66,12 @@ public class Board {
         this.width = width+2;
         this.height = height+2;
         this.board = new char[height+2][width+2];
+        // Initialize the board with walls
+        for (int i = 0; i < height+2; i++) {
+            for (int j = 0; j < width+2; j++) {
+                this.board[i][j] = '壁';
+            }
+        }
     }
     public void setPieceCount(int normalPieceCount) {
         if (normalPieceCount <= 0) {

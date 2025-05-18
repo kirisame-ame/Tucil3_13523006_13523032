@@ -30,13 +30,11 @@ public class ParserController {
                     default -> {
                         if(lineCount == 3 && line.charAt(0) != 'K' && line.charAt(0) !=' ') {
                             int offset = 1;
-                            for (int i=0;i<Board.getInstance().getWidth();i++) {
-                                Board.getInstance().setBoardAt(0, i, '壁');
+                            for (int i=0;i<Board.getInstance().getWidth()-1;i++) {
                                 try {
                                     char value = line.charAt(i);
                                     if(i==0 && (value=='K'||value=='k'|| value==' ')){
-                                        Board.getInstance().setBoardAt(lineCount - 3, 0, '壁');
-                                        offset = 0;
+                                      offset = 0;
                                     }else{
                                         value = Character.toUpperCase(value);
                                     }
@@ -61,7 +59,6 @@ public class ParserController {
                             try {
                                 char value = line.charAt(i);
                                 if(i==0 && (value=='K'||value=='k'|| value==' ')){
-                                    Board.getInstance().setBoardAt(lineCount - 3, 0, '壁');
                                     offset = 0;
                                 }
                                 // WIP IF K/EMPTY, no need i+1
