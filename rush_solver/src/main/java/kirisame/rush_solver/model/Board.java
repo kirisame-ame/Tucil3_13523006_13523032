@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Board {
-    // Singleton Pattern
     private int height;
     private int width;
     private char[][] board;
     private int normalPieceCount;
     private int[] endGoal = new int[2];
     private ArrayList<Piece> pieces = new ArrayList<>();
-    private static final Board instance = new Board();
-    private Board() {
+    public Board() {
         this.height = 0;
         this.width = 0;
         this.board = new char[0][0];
@@ -20,14 +18,6 @@ public class Board {
         this.endGoal[0] = 0;
         this.endGoal[1] = 0;
         this.pieces = new ArrayList<>();
-    }
-    /**
-     * Returns the singleton instance of the {@code Board} class.
-     *
-     * @return the single {@code Board} instance
-     */
-    public static Board getInstance() {
-        return instance;
     }
     public int getHeight() {
         return height;
@@ -111,6 +101,11 @@ public class Board {
         }
         return sb.toString();
     }
+    public void printPieces(){
+        for(Piece p : pieces){
+            p.printInfo();
+        }
+    }
     public void parsePieces(){
         HashSet<Character> pieceIds = new HashSet<>();
         for (int i = 0; i < height; i++) {
@@ -149,6 +144,60 @@ public class Board {
                     }
                 }
             }
+        }
+    }
+    /**
+     * Moves the piece in the specified direction.
+     * @param p the piece moved
+     * @param distance positive goes Right and Up, negative goes Left and Down
+    */
+    public void move(Piece p,int distance){
+        boolean positive = true;
+        char[][] board = this.getBoard();
+        if(distance <0){
+            positive = false;
+            distance = -distance;
+        }
+        if(p.axis==0){
+            for (int i = 0; i < distance; i++) {
+                if(positive){
+                    if(board[p.row][p.col+i]=='K' && p instanceof PrimaryPiece){
+                        // TODO: Implement win
+                    }else if(!(board[p.row][p.col+i] == '.')){
+                        throw new IllegalArgumentException("Piece hits something at (" + p.row + "," + (p.col+i) + ")");
+                    }else{
+                        board[p.row][p.col+i-1] = '.';
+                        board[p.row][p.col+i] = p.id;
+                    }
+                }
+            }
+            // Move the piece if no collision
+            if(positive){
+                p.col += distance;
+            }else{
+                p.col -= distance;
+            }
+            this.setBoard(board);
+        }else if (p.axis==1){
+            for (int i = 0; i < distance; i++) {
+                if(positive){
+                    if(board[p.row+i][p.col]=='K' && p instanceof PrimaryPiece){
+                        // TODO: Implement win
+                    }else if(!(board[p.row+i][p.col] == '.')){
+                        throw new IllegalArgumentException("Piece hits something at (" + (p.row+i) + "," + p.col + ")");
+                    }else{
+                        board[p.row+i-1][p.col] = '.';
+                        board[p.row+i][p.col] = p.id;
+                    }
+                }
+            }
+            // Move the piece if no collision
+            if(positive){
+                p.row += distance;
+            }else{
+                p.row -= distance;
+            }
+            this.setBoard(board);
         }
     }
 }

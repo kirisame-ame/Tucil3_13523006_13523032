@@ -28,8 +28,8 @@ public class MainController {
         try {
             // Read file content as String (assuming text file)
             String content = new String(file.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
-            ParserController.readFile(content);
-            return ResponseEntity.ok(Board.getInstance().boardToString());
+            Board rootBoard = ParserController.readFile(content);
+            return ResponseEntity.ok(rootBoard.boardToString());
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Failed to parse file: " + e.getMessage());
         }

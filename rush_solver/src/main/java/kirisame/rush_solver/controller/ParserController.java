@@ -8,8 +8,9 @@ import java.util.HashSet;
 import kirisame.rush_solver.model.Board;
 
 public class ParserController {
-    public static void readFile(String fileContent) {
+    public static Board readFile(String fileContent) {
         try(BufferedReader br = new BufferedReader(new StringReader(fileContent))) {
+            Board rootBoard = new Board();
             int lineCount = 0;
             int normalPieceCount = 0;
             HashSet<Character> pieceIds = new HashSet<>();
@@ -21,16 +22,16 @@ public class ParserController {
                         String[] dimensions = line.split(" ");
                         int height = Integer.parseInt(dimensions[0]);
                         int width = Integer.parseInt(dimensions[1]);
-                        Board.getInstance().setSize(height, width);
+                        rootBoard.setSize(height, width);
                     }
                     case 2 -> {
                         normalPieceCount = Integer.parseInt(line);
-                        Board.getInstance().setPieceCount(normalPieceCount);
+                        rootBoard.setPieceCount(normalPieceCount);
                     }
                     default -> {
                         if(lineCount == 3 && line.charAt(0) != 'K' && line.charAt(0) !=' ') {
                             int offset = 1;
-                            for (int i=0;i<Board.getInstance().getWidth()-1;i++) {
+                            for (int i=0;i<rootBoard.getWidth()-1;i++) {
                                 try {
                                     char value = line.charAt(i);
                                     if(i==0 && (value=='K'||value=='k'|| value==' ')){
@@ -38,23 +39,23 @@ public class ParserController {
                                     }else{
                                         value = Character.toUpperCase(value);
                                     }
-                                    Board.getInstance().setBoardAt(1, i+offset,value);
+                                    rootBoard.setBoardAt(1, i+offset,value);
                                 } catch (Exception e) {
                                 }
                             }
                             lineCount++;
                             break;
                         }
-                        if(line.length() > Board.getInstance().getWidth() - 1) {
+                        if(line.length() > rootBoard.getWidth() - 1) {
                             throw new IllegalArgumentException("Line length exceeds the specified width.");
                         }
-                        if(lineCount > Board.getInstance().getHeight() + 3) {
+                        if(lineCount > rootBoard.getHeight() + 3) {
                             break;
                         }
-                        if(normalPieceCount > Board.getInstance().getPieceCount()) {
+                        if(normalPieceCount > rootBoard.getPieceCount()) {
                             throw new IllegalArgumentException("Piece count exceeds the specified limit.");
                         }
-                        for(int i=0;i<Board.getInstance().getWidth()-1;i++) {
+                        for(int i=0;i<rootBoard.getWidth()-1;i++) {
                             int offset = 1;
                             try {
                                 char value = line.charAt(i);
@@ -65,7 +66,7 @@ public class ParserController {
                                 if(value>='a' && value<='Z') {
                                     value = Character.toUpperCase(value);
                                     if(value=='K'){
-                                        Board.getInstance().setEndGoal(lineCount - 3, i+offset);
+                                        rootBoard.setEndGoal(lineCount - 3, i+offset);
                                     }
                                     if(value!='K'&& value!='P'){
                                         if(pieceIds.add(value)){
@@ -76,7 +77,7 @@ public class ParserController {
                                 if(value==' '){
                                     value = '壁';
                                 }
-                                Board.getInstance().setBoardAt(lineCount - 3, i+offset, value);
+                                rootBoard.setBoardAt(lineCount - 3, i+offset, value);
                             } catch (Exception e) {
                             }
                             
@@ -84,10 +85,12 @@ public class ParserController {
                     }
                 }
             }
-            Board.getInstance().parsePieces();
-            System.out.println("Piece Ids:");
-            System.out.println(Board.getInstance().getPieceIds().toString());
+            rootBoard.parsePieces();
+            System.out.println("Piece Info:");
+            rootBoard.printPieces();
+            return rootBoard;
         } catch (IOException e) {
         }
+        return null;
     }
 }

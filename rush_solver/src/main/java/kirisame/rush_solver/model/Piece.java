@@ -41,57 +41,11 @@ public class Piece {
     public int getCol() {
         return col;
     }
-    /**
-     * Moves the piece in the specified direction.
-     * @param distance positive goes Right and Up, negative goes Left and Down
-     */
-    public void move(int distance){
-        boolean positive = true;
-        char[][] board = Board.getInstance().getBoard();
-        if(distance <0){
-            positive = false;
-            distance = -distance;
-        }
-        if(this.axis==0){
-            for (int i = 0; i < distance; i++) {
-                if(positive){
-                    if(board[this.row][this.col+i]=='K' && this instanceof PrimaryPiece){
-                        // TODO: Implement win
-                    }else if(!(board[this.row][this.col+i] == '.')){
-                        throw new IllegalArgumentException("Piece hits something at (" + this.row + "," + (this.col+i) + ")");
-                    }else{
-                        board[this.row][this.col+i-1] = '.';
-                        board[this.row][this.col+i] = this.id;
-                    }
-                }
-            }
-            // Move the piece if no collision
-            if(positive){
-                this.col += distance;
-            }else{
-                this.col -= distance;
-            }
-            Board.getInstance().setBoard(board);
-        }else if (this.axis==1){
-            for (int i = 0; i < distance; i++) {
-                if(positive){
-                    if(board[this.row+i][this.col]=='K' && this instanceof PrimaryPiece){
-                        // TODO: Implement win
-                    }else if(!(board[this.row+i][this.col] == '.')){
-                        throw new IllegalArgumentException("Piece hits something at (" + (this.row+i) + "," + this.col + ")");
-                    }else{
-                        board[this.row+i-1][this.col] = '.';
-                        board[this.row+i][this.col] = this.id;
-                    }
-                }
-            }
-            // Move the piece if no collision
-            if(positive){
-                this.row += distance;
-            }else{
-                this.row -= distance;
-            }
-            Board.getInstance().setBoard(board);
-        }
+    public void printInfo(){
+        System.out.println("Id: "+id);
+        System.out.println("    Length: "+length);
+        System.out.println("    Axis: "+axis);
+        System.out.println("    Location: ("+row+","+col+")");
     }
+    
 }
