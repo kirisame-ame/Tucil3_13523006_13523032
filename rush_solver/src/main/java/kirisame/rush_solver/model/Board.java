@@ -198,6 +198,39 @@ public class Board {
         return copy;
     }
 
+    public boolean equals(Board other) {
+
+        if (other.getHeight() == 0 || other.getWidth() == 0) {
+            return false;
+        }
+
+        // Compare board dimensions
+        if (this.height != other.getHeight() || this.width != other.getWidth()) {
+            return false;
+        }
+
+        // Compare board contents
+
+        char[][] otherBoard = other.getBoard();
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (this.board[i][j] != otherBoard[i][j]) {
+                    return false;
+                }
+            }
+        }
+
+        // compare normal piece count
+        if (this.normalPieceCount != other.getPieceCount()) {
+            return false;
+        }
+
+        // Compare end goal
+        int[] otherEndGoal = other.getEndGoal();
+        return (this.endGoal[0] != otherEndGoal[0] || this.endGoal[1] != otherEndGoal[1]);
+    }
+
     /**
      * Moves the piece in the specified direction.
      * 
