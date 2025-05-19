@@ -228,7 +228,7 @@ public class Board {
 
         // Compare end goal
         int[] otherEndGoal = other.getEndGoal();
-        return (this.endGoal[0] != otherEndGoal[0] || this.endGoal[1] != otherEndGoal[1]);
+        return (!(this.endGoal[0] != otherEndGoal[0] || this.endGoal[1] != otherEndGoal[1]));
     }
 
     /**
