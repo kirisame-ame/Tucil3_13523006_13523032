@@ -9,9 +9,9 @@ public class Piece {
 
     /**
      * @param length length of the piece
-     * @param axis 0 for horizontal, 1 for vertical
-     * @param row row position of the piece, Top-Left as reference
-     * @param col column position of the piece, Top-Left as reference
+     * @param axis   0 for horizontal, 1 for vertical
+     * @param row    row position of the piece, Top-Left as reference
+     * @param col    column position of the piece, Top-Left as reference
      */
     public Piece(char id, int length, int axis, int row, int col) {
         if (length <= 0) {
@@ -26,26 +26,32 @@ public class Piece {
         this.row = row;
         this.col = col;
     }
-    public int getId() {
+
+    public char getId() {
         return id;
     }
+
     public int getLength() {
         return length;
     }
+
     public int getAxis() {
         return axis;
     }
+
     public int getRow() {
         return row;
     }
+
     public int getCol() {
         return col;
     }
-    public void printInfo(){
-        System.out.println("Id: "+id);
-        System.out.println("    Length: "+length);
-        System.out.println("    Axis: "+axis);
-        System.out.println("    Location: ("+row+","+col+")");
+
+    public void printInfo() {
+        System.out.println("Id: " + id);
+        System.out.println("    Length: " + length);
+        System.out.println("    Axis: " + axis);
+        System.out.println("    Location: (" + row + "," + col + ")");
     }
-    
+
 }
