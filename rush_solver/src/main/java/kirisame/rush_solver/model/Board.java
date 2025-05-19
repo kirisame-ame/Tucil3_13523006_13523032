@@ -293,4 +293,19 @@ public class Board {
         setBoard(tempBoard);
     }
 
+    public boolean isGoal() {
+        char[][] grid = this.getBoard();
+        int[] goal = this.getEndGoal();
+        if (goal[0] == 0) {
+            return grid[goal[0] + 1][goal[1]] == 'P';
+        } else if (goal[0] == this.getHeight() - 1) {
+            return grid[goal[0] - 1][goal[1]] == 'P';
+        } else if (goal[1] == 0) {
+            return grid[goal[0]][goal[1] + 1] == 'P';
+        } else if (goal[1] == this.getWidth() - 1) {
+            return grid[goal[0]][goal[1] - 1] == 'P';
+        } else
+            return false;
+    }
+
 }
