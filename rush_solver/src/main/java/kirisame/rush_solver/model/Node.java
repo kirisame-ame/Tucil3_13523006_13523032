@@ -2,6 +2,7 @@ package kirisame.rush_solver.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Node {
 
@@ -73,9 +74,71 @@ public class Node {
      * @param node the node to check
      * @return the number of blocking pieces
      */
-    public int blockingPieces(Node node) {
+    public int blockingPieces() {
         int count = 0;
-
+        int axis = this.board.getPieces().get('P').getAxis();
+        int row = this.board.getPieces().get('P').getRow();
+        int col = this.board.getPieces().get('P').getCol();
+        HashSet<Character> visitedPieces = new HashSet<>();
+        if(axis == 0) {
+            if(this.board.getEndGoal()[0]<row){
+                for(int i=row;i>=this.board.getEndGoal()[0];i--){
+                    char value = this.board.getBoard()[i][col];
+                    if(value=='K'){
+                        break;
+                    }
+                    if(value>='A' && value<='Z'){
+                        if(!visitedPieces.contains(value)){
+                            count++;
+                            visitedPieces.add(value);
+                        }
+                    }
+                }
+            }else{
+                for(int i=row;i<=this.board.getEndGoal()[0];i++){
+                    char value = this.board.getBoard()[i][col];
+                    if(value=='K'){
+                        break;
+                    }
+                    if(value>='A' && value<='Z'){
+                        if(!visitedPieces.contains(value)){
+                            count++;
+                            visitedPieces.add(value);
+                        }
+                    }
+                }
+            }
+            
+        } else {
+            if(this.board.getEndGoal()[1]<col){
+                for(int i=col;i>=this.board.getEndGoal()[1];i--){
+                    char value = this.board.getBoard()[row][i];
+                    if(value=='K'){
+                        break;
+                    }
+                    if(value>='A' && value<='Z'){
+                        if(!visitedPieces.contains(value)){
+                            count++;
+                            visitedPieces.add(value);
+                        }
+                    }
+                }
+            }else{
+                for(int i=col;i<=this.board.getEndGoal()[1];i++){
+                    char value = this.board.getBoard()[row][i];
+                    if(value=='K'){
+                        break;
+                    }
+                    if(value>='A' && value<='Z'){
+                        if(!visitedPieces.contains(value)){
+                            count++;
+                            visitedPieces.add(value);
+                        }
+                    }
+                }
+            }
+            
+        }
         
         return count;
     }
