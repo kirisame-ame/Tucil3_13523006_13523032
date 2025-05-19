@@ -31,9 +31,11 @@ public class Node {
     public int getDepth() {
         return depth;
     }
+
     public int getHeuristicValue() {
         return heuristicValue;
     }
+
     /**
      * Expands the current node by checking all possible moves for each piece
      * 
@@ -41,7 +43,7 @@ public class Node {
      */
     public Node[] expand() {
         ArrayList<Node> nodes = new ArrayList<>();
-        HashMap<Character, Piece> pieces = this.board.getPieces();
+        HashMap<Character, Piece> pieces = this.board.deepCopy().getPieces();
 
         for (Piece piece : pieces.values()) {
 
@@ -49,7 +51,8 @@ public class Node {
             for (int dist = 1;; dist++) {
                 try {
                     Board newBoard = this.board.deepCopy();
-                    newBoard.move(piece, dist);
+                    Piece copiedPiece = newBoard.getPieces().get(piece.getId());
+                    newBoard.move(copiedPiece, dist);
                     nodes.add(new Node(newBoard, this, this.depth + 1, this.heuristic));
                 } catch (Exception e) {
                     break; // Stop trying further in this direction
@@ -60,7 +63,8 @@ public class Node {
             for (int dist = -1;; dist--) {
                 try {
                     Board newBoard = this.board.deepCopy();
-                    newBoard.move(piece, dist);
+                    Piece copiedPiece = newBoard.getPieces().get(piece.getId());
+                    newBoard.move(copiedPiece, dist);
                     nodes.add(new Node(newBoard, this, this.depth + 1, this.heuristic));
                 } catch (Exception e) {
                     break;
@@ -93,66 +97,66 @@ public class Node {
         int row = this.board.getPieces().get('P').getRow();
         int col = this.board.getPieces().get('P').getCol();
         HashSet<Character> visitedPieces = new HashSet<>();
-        if(axis == 0) {
-            if(this.board.getEndGoal()[0]<row){
-                for(int i=row;i>=this.board.getEndGoal()[0];i--){
+        if (axis == 0) {
+            if (this.board.getEndGoal()[0] < row) {
+                for (int i = row; i >= this.board.getEndGoal()[0]; i--) {
                     char value = this.board.getBoard()[i][col];
-                    if(value=='K'){
+                    if (value == 'K') {
                         break;
                     }
-                    if(value>='A' && value<='Z'){
-                        if(!visitedPieces.contains(value)){
+                    if (value >= 'A' && value <= 'Z') {
+                        if (!visitedPieces.contains(value)) {
                             count++;
                             visitedPieces.add(value);
                         }
                     }
                 }
-            }else{
-                for(int i=row;i<=this.board.getEndGoal()[0];i++){
+            } else {
+                for (int i = row; i <= this.board.getEndGoal()[0]; i++) {
                     char value = this.board.getBoard()[i][col];
-                    if(value=='K'){
+                    if (value == 'K') {
                         break;
                     }
-                    if(value>='A' && value<='Z'){
-                        if(!visitedPieces.contains(value)){
+                    if (value >= 'A' && value <= 'Z') {
+                        if (!visitedPieces.contains(value)) {
                             count++;
                             visitedPieces.add(value);
                         }
                     }
                 }
             }
-            
+
         } else {
-            if(this.board.getEndGoal()[1]<col){
-                for(int i=col;i>=this.board.getEndGoal()[1];i--){
+            if (this.board.getEndGoal()[1] < col) {
+                for (int i = col; i >= this.board.getEndGoal()[1]; i--) {
                     char value = this.board.getBoard()[row][i];
-                    if(value=='K'){
+                    if (value == 'K') {
                         break;
                     }
-                    if(value>='A' && value<='Z'){
-                        if(!visitedPieces.contains(value)){
+                    if (value >= 'A' && value <= 'Z') {
+                        if (!visitedPieces.contains(value)) {
                             count++;
                             visitedPieces.add(value);
                         }
                     }
                 }
-            }else{
-                for(int i=col;i<=this.board.getEndGoal()[1];i++){
+            } else {
+                for (int i = col; i <= this.board.getEndGoal()[1]; i++) {
                     char value = this.board.getBoard()[row][i];
-                    if(value=='K'){
+                    if (value == 'K') {
                         break;
                     }
-                    if(value>='A' && value<='Z'){
-                        if(!visitedPieces.contains(value)){
+                    if (value >= 'A' && value <= 'Z') {
+                        if (!visitedPieces.contains(value)) {
                             count++;
                             visitedPieces.add(value);
                         }
                     }
                 }
             }
-            
+
         }
-        
+
         return count;
     }
 }
