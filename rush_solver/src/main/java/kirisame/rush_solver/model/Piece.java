@@ -8,8 +8,10 @@ public class Piece {
     protected int col;
 
     /**
-     *  Note: Piece row and col are set on the top-left corner of the piece.
-     *  The row and col are the coordinates of the piece on the board.
+     * @param length length of the piece
+     * @param axis 0 for horizontal, 1 for vertical
+     * @param row row position of the piece, Top-Left as reference
+     * @param col column position of the piece, Top-Left as reference
      */
     public Piece(char id, int length, int axis, int row, int col) {
         if (length <= 0) {
