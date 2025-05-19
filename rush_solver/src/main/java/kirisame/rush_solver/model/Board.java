@@ -132,6 +132,11 @@ public class Board {
             for (int j = 0; j < width; j++) {
                 char value = board[i][j];
                 if (value != '壁' && value != ' ' && value != '.') {
+                    if(value == 'K') {
+                        this.endGoal[0] = i;
+                        this.endGoal[1] = j;
+                        continue;
+                    }
                     if (!pieces.containsKey(value)) {
                         int length = 0;
                         int axis;
