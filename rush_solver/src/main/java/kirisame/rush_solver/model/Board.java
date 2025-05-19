@@ -34,8 +34,15 @@ public class Board {
     public int getWidth() {
         return width;
     }
+    /**
+     * 
+     * @return a clone of the board
+     */
     public char[][] getBoard() {
-        return board;
+        return board.clone();
+    }
+    public void setBoard(char[][] board){
+        this.board = board.clone();
     }
     /**
      * Care to account for the border.

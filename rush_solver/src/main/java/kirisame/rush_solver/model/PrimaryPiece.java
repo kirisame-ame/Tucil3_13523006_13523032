@@ -12,6 +12,6 @@ public class PrimaryPiece extends Piece{
      * @param y the y-coordinate of the primary piece's position
      */
     public PrimaryPiece(int height, int width, int x, int y) {
-        super(0, height, width, x, y);
+        super('P', height, width, x, y);
     }
 }
