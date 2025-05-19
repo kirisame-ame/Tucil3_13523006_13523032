@@ -11,7 +11,7 @@ public class Board {
     private int[] endGoal = new int[2];
     private HashMap<Character, Piece> pieces = new HashMap<>();
     private boolean solved = false;
-    private static final char WALL = '壁';
+    private static final char WALL = '©'; // fuck you @kirisame
     private static final char EMPTY = ' ';
 
     public Board() {
@@ -66,6 +66,7 @@ public class Board {
     public int[] getEndGoal() {
         return endGoal;
     }
+
     public HashMap<Character, Piece> getPieces() {
         return pieces;
     }
@@ -77,6 +78,7 @@ public class Board {
         }
         return pieceIds;
     }
+
     public boolean isSolved() {
         return solved;
     }
@@ -138,7 +140,7 @@ public class Board {
             for (int j = 0; j < width; j++) {
                 char value = board[i][j];
                 if (value != WALL && value != EMPTY && value != '.') {
-                    if(value == 'K') {
+                    if (value == 'K') {
                         this.endGoal[0] = i;
                         this.endGoal[1] = j;
                         continue;
@@ -248,73 +250,47 @@ public class Board {
      * @param distance positive goes Right and Up, negative goes Left and Down
      */
     public void move(Piece p, int distance) {
-        boolean positive = true;
-        char[][] tempBoard = this.getBoard();
-        if (distance < 0) {
-            positive = false;
-            distance = -distance;
+        boolean positive = distance > 0;
+        distance = Math.abs(distance);
+        char[][] tempBoard = getBoard(); // deep copy from getBoard()
+
+        // Clear the piece from the board
+        for (int i = 0; i < p.length; i++) {
+            int row = p.axis == 0 ? p.row : p.row + i;
+            int col = p.axis == 0 ? p.col + i : p.col;
+            tempBoard[row][col] = '.'; // Mark as empty
         }
+
+        // Check collision and update piece position
+        for (int i = 1; i <= distance; i++) {
+            int checkRow = p.axis == 0 ? p.row : (positive ? p.row + p.length - 1 + i : p.row - i);
+            int checkCol = p.axis == 0 ? (positive ? p.col + p.length - 1 + i : p.col - i) : p.col;
+
+            if (checkRow < 0 || checkCol < 0 || checkRow >= height || checkCol >= width)
+                throw new IllegalArgumentException("Out of bounds");
+
+            char cell = tempBoard[checkRow][checkCol];
+            if (cell != '.' && !(cell == 'K' && p instanceof PrimaryPiece)) {
+                throw new IllegalArgumentException("Collision at (" + checkRow + "," + checkCol + ")");
+            }
+        }
+
+        // Update piece location
         if (p.axis == 0) {
-            for (int i = 1; i < distance; i++) {
-                if (positive) {
-                    if (tempBoard[p.row][p.col+p.length - 1 + i] == 'K' && p instanceof PrimaryPiece) {
-                        this.solved = true;
-                    } else if (!(tempBoard[p.row][p.col+p.length-1 + i] == '.')) {
-                        throw new IllegalArgumentException(
-                                "Piece hits something at (" + p.row + "," + (p.col+p.length-1 + i) + ")");
-                    } else {
-                        tempBoard[p.row][p.col + i - 1] = '.';
-                        tempBoard[p.row][p.col+p.length-1 + i] = p.id;
-                    }
-                }else{
-                    if (tempBoard[p.row][p.col - i] == 'K' && p instanceof PrimaryPiece) {
-                        this.solved = true;
-                    } else if (!(tempBoard[p.row][p.col - i] == '.')) {
-                        throw new IllegalArgumentException(
-                                "Piece hits something at (" + p.row + "," + (p.col - i) + ")");
-                    } else {
-                        tempBoard[p.row][p.col - i+ p.length] = '.';
-                        tempBoard[p.row][p.col - i] = p.id;
-                    }
-                }
-            }
-            // Move the piece if no collision
-            p.col += distance;
-            if (p.col < 0 || p.col >= this.width) {
-                throw new IndexOutOfBoundsException("Piece moved out of bounds.");
-            }
-            this.setBoard(tempBoard);
-        } else if (p.axis == 1) {
-            for (int i = 1; i < distance; i++) {
-                if (positive) {
-                    if (tempBoard[p.row- i][p.col] == 'K' && p instanceof PrimaryPiece) {
-                        this.solved = true;
-                    } else if (!(tempBoard[p.row - i][p.col] == '.')) {
-                        throw new IllegalArgumentException(
-                                "Piece hits something at (" + (p.row - i) + "," + p.col + ")");
-                    } else {
-                        tempBoard[p.row - i + p.length][p.col] = '.';
-                        tempBoard[p.row - i][p.col] = p.id;
-                    }
-                }else{
-                    if (tempBoard[p.row + p.length-1+ i][p.col] == 'K' && p instanceof PrimaryPiece) {
-                        this.solved = true;
-                    }
-                    else if (!(tempBoard[p.row + p.length-1+ i][p.col] == '.')) {
-                        throw new IllegalArgumentException(
-                                "Piece hits something at (" + (p.row + p.length-1+ i) + "," + p.col + ")");
-                    } else {
-                        tempBoard[p.row + i - 1][p.col] = '.';
-                        tempBoard[p.row + p.length-1+ i][p.col] = p.id;
-                    }
-                }
-            }
-            // Move the piece if no collision
-            p.row += distance;
-            if (p.row < 0 || p.row >= this.height) {
-                throw new IndexOutOfBoundsException("Piece moved out of bounds.");
-            }
-            this.setBoard(tempBoard);
+            p.col += positive ? distance : -distance;
+        } else {
+            p.row += positive ? distance : -distance;
         }
+
+        // Place the piece at the new location
+        for (int i = 0; i < p.length; i++) {
+            int row = p.axis == 0 ? p.row : p.row + i;
+            int col = p.axis == 0 ? p.col + i : p.col;
+            tempBoard[row][col] = p.id;
+        }
+
+        // Update the board
+        setBoard(tempBoard);
     }
+
 }
