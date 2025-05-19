@@ -1,6 +1,7 @@
 package kirisame.rush_solver.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Node {
 
@@ -33,17 +34,16 @@ public class Node {
      */
     public Node[] expand() {
         ArrayList<Node> nodes = new ArrayList<>();
-        ArrayList<Piece> pieces = this.board.getPieces();
+        HashMap<Character, Piece> pieces = this.board.getPieces();
 
-        for (int idx = 0; idx < pieces.size(); idx++) {
+        for (Piece piece : pieces.values()) {
 
             // Try moving in positive direction
             for (int dist = 1;; dist++) {
                 try {
                     Board newBoard = this.board.deepCopy();
-                    Piece movingPiece = newBoard.getPieces().get(idx);
-                    System.out.println("Trying to move piece " + movingPiece.getId() + " by " + dist);
-                    newBoard.move(movingPiece, dist);
+                    System.out.println("Trying to move piece " + piece.getId() + " by " + dist);
+                    newBoard.move(piece, dist);
                     nodes.add(new Node(newBoard, this, this.depth + 1));
                 } catch (Exception e) {
                     break; // Stop trying further in this direction
@@ -54,9 +54,8 @@ public class Node {
             for (int dist = -1;; dist--) {
                 try {
                     Board newBoard = this.board.deepCopy();
-                    Piece movingPiece = newBoard.getPieces().get(idx);
-                    System.out.println("Trying to move piece " + movingPiece.getId() + " by " + dist);
-                    newBoard.move(movingPiece, dist);
+                    System.out.println("Trying to move piece " + piece.getId() + " by " + dist);
+                    newBoard.move(piece, dist);
                     nodes.add(new Node(newBoard, this, this.depth + 1));
                 } catch (Exception e) {
                     break;
@@ -67,4 +66,17 @@ public class Node {
         return nodes.toArray(Node[]::new);
     }
 
+    // Heuristics
+    /**
+     * Counts the number of pieces that are blocking the primary piece
+     * 
+     * @param node the node to check
+     * @return the number of blocking pieces
+     */
+    public int blockingPieces(Node node) {
+        int count = 0;
+
+        
+        return count;
+    }
 }

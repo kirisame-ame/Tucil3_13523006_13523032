@@ -9,4 +9,5 @@ public class PrimaryPiece extends Piece{
     public PrimaryPiece(int length, int axis, int row, int col) {
         super('P', length, axis, row, col);
     }
+    
 }

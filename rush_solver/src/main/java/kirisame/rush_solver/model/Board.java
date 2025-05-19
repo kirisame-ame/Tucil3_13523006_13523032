@@ -1,6 +1,6 @@
 package kirisame.rush_solver.model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Board {
@@ -9,7 +9,7 @@ public class Board {
     private char[][] board;
     private int normalPieceCount;
     private int[] endGoal = new int[2];
-    private ArrayList<Piece> pieces = new ArrayList<>();
+    private HashMap<Character, Piece> pieces = new HashMap<>();
 
     public Board() {
         this.height = 0;
@@ -18,7 +18,7 @@ public class Board {
         this.normalPieceCount = 0;
         this.endGoal[0] = 0;
         this.endGoal[1] = 0;
-        this.pieces = new ArrayList<>();
+        this.pieces = new HashMap<>();
     }
 
     public int getHeight() {
@@ -63,13 +63,13 @@ public class Board {
         return endGoal;
     }
 
-    public ArrayList<Piece> getPieces() {
+    public HashMap<Character, Piece> getPieces() {
         return pieces;
     }
 
     public HashSet<Character> getPieceIds() {
         HashSet<Character> pieceIds = new HashSet<>();
-        for (Piece p : pieces) {
+        for (Piece p : pieces.values()) {
             pieceIds.add(p.id);
         }
         return pieceIds;
@@ -121,19 +121,18 @@ public class Board {
     }
 
     public void printPieces() {
-        for (Piece p : pieces) {
+        for (Piece p : pieces.values()) {
             p.printInfo();
         }
     }
 
     public void parsePieces() {
-        HashSet<Character> pieceIds = new HashSet<>();
+        pieces.clear();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 char value = board[i][j];
                 if (value != '壁' && value != ' ' && value != '.') {
-                    if (!pieceIds.contains(value)) {
-                        pieceIds.add(value);
+                    if (!pieces.containsKey(value)) {
                         int length = 0;
                         int axis;
                         // Check horizontal
@@ -143,9 +142,9 @@ public class Board {
                         if (length > 1) {
                             axis = 0;
                             if (value == 'P') {
-                                pieces.add(new PrimaryPiece(length, axis, i, j));
+                                pieces.put(value, new PrimaryPiece(length, axis, i, j));
                             } else {
-                                pieces.add(new Piece(value, length, axis, i, j));
+                                pieces.put(value, new Piece(value, length, axis, i, j));
                             }
                         }
                         // Check vertical
@@ -156,9 +155,9 @@ public class Board {
                         if (length > 1) {
                             axis = 1;
                             if (value == 'P') {
-                                pieces.add(new PrimaryPiece(length, axis, i, j));
+                                pieces.put(value, new PrimaryPiece(length, axis, i, j));
                             } else {
-                                pieces.add(new Piece(value, length, axis, i, j));
+                                pieces.put(value, new Piece(value, length, axis, i, j));
                             }
                         }
                     }
@@ -185,14 +184,14 @@ public class Board {
         copy.setEndGoal(goal[0], goal[1]);
 
         // Copy pieces (deep)
-        for (Piece p : this.getPieces()) {
+        for (Piece p : this.getPieces().values()) {
             Piece copyPiece;
             if (p instanceof PrimaryPiece) {
                 copyPiece = new PrimaryPiece(p.getLength(), p.getAxis(), p.getRow(), p.getCol());
             } else {
                 copyPiece = new Piece(p.getId(), p.getLength(), p.getAxis(), p.getRow(), p.getCol());
             }
-            copy.getPieces().add(copyPiece);
+            copy.getPieces().put(copyPiece.id, copyPiece);
         }
 
         return copy;
@@ -239,7 +238,7 @@ public class Board {
      */
     public void move(Piece p, int distance) {
         boolean positive = true;
-        char[][] board = this.getBoard();
+        char[][] tempBoard = this.getBoard();
         if (distance < 0) {
             positive = false;
             distance = -distance;
@@ -247,14 +246,14 @@ public class Board {
         if (p.axis == 0) {
             for (int i = 0; i < distance; i++) {
                 if (positive) {
-                    if (board[p.row][p.col + i] == 'K' && p instanceof PrimaryPiece) {
+                    if (tempBoard[p.row][p.col + i] == 'K' && p instanceof PrimaryPiece) {
                         // TODO: Implement win
-                    } else if (!(board[p.row][p.col + i] == '.')) {
+                    } else if (!(tempBoard[p.row][p.col + i] == '.')) {
                         throw new IllegalArgumentException(
                                 "Piece hits something at (" + p.row + "," + (p.col + i) + ")");
                     } else {
-                        board[p.row][p.col + i - 1] = '.';
-                        board[p.row][p.col + i] = p.id;
+                        tempBoard[p.row][p.col + i - 1] = '.';
+                        tempBoard[p.row][p.col + i] = p.id;
                     }
                 }
             }
@@ -264,18 +263,18 @@ public class Board {
             } else {
                 p.col -= distance;
             }
-            this.setBoard(board);
+            this.setBoard(tempBoard);
         } else if (p.axis == 1) {
             for (int i = 0; i < distance; i++) {
                 if (positive) {
-                    if (board[p.row + i][p.col] == 'K' && p instanceof PrimaryPiece) {
+                    if (tempBoard[p.row + i][p.col] == 'K' && p instanceof PrimaryPiece) {
                         // TODO: Implement win
-                    } else if (!(board[p.row + i][p.col] == '.')) {
+                    } else if (!(tempBoard[p.row + i][p.col] == '.')) {
                         throw new IllegalArgumentException(
                                 "Piece hits something at (" + (p.row + i) + "," + p.col + ")");
                     } else {
-                        board[p.row + i - 1][p.col] = '.';
-                        board[p.row + i][p.col] = p.id;
+                        tempBoard[p.row + i - 1][p.col] = '.';
+                        tempBoard[p.row + i][p.col] = p.id;
                     }
                 }
             }
@@ -285,7 +284,7 @@ public class Board {
             } else {
                 p.row -= distance;
             }
-            this.setBoard(board);
+            this.setBoard(tempBoard);
         }
     }
 }

@@ -8,6 +8,20 @@ import java.util.HashSet;
 import kirisame.rush_solver.model.Board;
 
 public class ParserController {
+    /**
+     * Parses the given file content representing a board configuration and constructs a Board object.
+     * The file content should follow a specific format:
+     * <ul>
+     *   <li>The first line contains the board's height and width, separated by a space.</li>
+     *   <li>The second line contains the number of normal pieces.</li>
+     *   <li>The subsequent lines represent the board layout, with each character indicating a piece, empty space, or special marker.</li>
+     * </ul>
+     * The method processes the file content line by line, sets up the board's size, pieces, and layout,
+     * and handles special cases such as the end goal ('K') and empty spaces.
+     * 
+     * @param fileContent the string content of the file to parse
+     * @return a {@link Board} object representing the parsed board configuration, or {@code null} if an error occurs
+     */
     public static Board readFile(String fileContent) {
         try(BufferedReader br = new BufferedReader(new StringReader(fileContent))) {
             Board rootBoard = new Board();
@@ -88,6 +102,7 @@ public class ParserController {
             rootBoard.parsePieces();
             System.out.println("Piece Info:");
             rootBoard.printPieces();
+            System.out.println(rootBoard.boardToString());
             return rootBoard;
         } catch (IOException e) {
         }
