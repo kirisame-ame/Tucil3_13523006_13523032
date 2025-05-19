@@ -1,6 +1,7 @@
 package kirisame.rush_solver.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Board {
     // Singleton Pattern
@@ -62,6 +63,13 @@ public class Board {
     public ArrayList<Piece> getPieces() {
         return pieces;
     }
+    public HashSet<Character> getPieceIds(){
+        HashSet<Character> pieceIds = new HashSet<>();
+        for (Piece p : pieces){
+            pieceIds.add(p.id);
+        }
+        return pieceIds;
+    }
     /**
      * Sets the size of the board.
      * Size is padded by 1 to account for the border. 
@@ -102,5 +110,45 @@ public class Board {
             sb.append("\n");
         }
         return sb.toString();
+    }
+    public void parsePieces(){
+        HashSet<Character> pieceIds = new HashSet<>();
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                char value = board[i][j];
+                if (value != '壁' && value != ' ' && value != '.') {
+                    if (!pieceIds.contains(value)) {
+                        pieceIds.add(value);
+                        int length = 0;
+                        int axis;
+                        // Check horizontal
+                        for (int k = j; k < width && board[i][k] == value; k++) {
+                            length++;
+                        }
+                        if (length > 1) {
+                            axis = 0;
+                            if(value=='P'){
+                                pieces.add(new PrimaryPiece(length, axis, i, j));
+                            }else{
+                                pieces.add(new Piece(value, length, axis, i, j));
+                            }
+                        }
+                        // Check vertical
+                        length = 0;
+                        for (int k = i; k < height && board[k][j] == value; k++) {
+                            length++;
+                        }
+                        if (length > 1) {
+                            axis = 1;
+                            if(value=='P'){
+                                pieces.add(new PrimaryPiece(length, axis, i, j));
+                            }else{
+                                pieces.add(new Piece(value, length, axis, i, j));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

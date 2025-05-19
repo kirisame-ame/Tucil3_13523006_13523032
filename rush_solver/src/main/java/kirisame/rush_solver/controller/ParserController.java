@@ -84,6 +84,9 @@ public class ParserController {
                     }
                 }
             }
+            Board.getInstance().parsePieces();
+            System.out.println("Piece Ids:");
+            System.out.println(Board.getInstance().getPieceIds().toString());
         } catch (IOException e) {
         }
     }
