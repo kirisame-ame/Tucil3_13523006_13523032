@@ -244,45 +244,64 @@ public class Board {
             distance = -distance;
         }
         if (p.axis == 0) {
-            for (int i = 0; i < distance; i++) {
+            for (int i = 1; i < distance; i++) {
                 if (positive) {
-                    if (tempBoard[p.row][p.col + i] == 'K' && p instanceof PrimaryPiece) {
+                    if (tempBoard[p.row][p.col+p.length - 1 + i] == 'K' && p instanceof PrimaryPiece) {
                         // TODO: Implement win
-                    } else if (!(tempBoard[p.row][p.col + i] == '.')) {
+                    } else if (!(tempBoard[p.row][p.col+p.length-1 + i] == '.')) {
                         throw new IllegalArgumentException(
-                                "Piece hits something at (" + p.row + "," + (p.col + i) + ")");
+                                "Piece hits something at (" + p.row + "," + (p.col+p.length-1 + i) + ")");
                     } else {
                         tempBoard[p.row][p.col + i - 1] = '.';
-                        tempBoard[p.row][p.col + i] = p.id;
+                        tempBoard[p.row][p.col+p.length-1 + i] = p.id;
+                    }
+                }else{
+                    if (tempBoard[p.row][p.col - i] == 'K' && p instanceof PrimaryPiece) {
+                        //TODO: Implement win
+                    } else if (!(tempBoard[p.row][p.col - i] == '.')) {
+                        throw new IllegalArgumentException(
+                                "Piece hits something at (" + p.row + "," + (p.col - i) + ")");
+                    } else {
+                        tempBoard[p.row][p.col - i+ p.length] = '.';
+                        tempBoard[p.row][p.col - i] = p.id;
                     }
                 }
             }
             // Move the piece if no collision
-            if (positive) {
-                p.col += distance;
-            } else {
-                p.col -= distance;
+            p.col += distance;
+            if (p.col < 0 || p.col >= this.width) {
+                throw new IndexOutOfBoundsException("Piece moved out of bounds.");
             }
             this.setBoard(tempBoard);
         } else if (p.axis == 1) {
-            for (int i = 0; i < distance; i++) {
+            for (int i = 1; i < distance; i++) {
                 if (positive) {
-                    if (tempBoard[p.row + i][p.col] == 'K' && p instanceof PrimaryPiece) {
+                    if (tempBoard[p.row- i][p.col] == 'K' && p instanceof PrimaryPiece) {
                         // TODO: Implement win
-                    } else if (!(tempBoard[p.row + i][p.col] == '.')) {
+                    } else if (!(tempBoard[p.row - i][p.col] == '.')) {
                         throw new IllegalArgumentException(
-                                "Piece hits something at (" + (p.row + i) + "," + p.col + ")");
+                                "Piece hits something at (" + (p.row - i) + "," + p.col + ")");
+                    } else {
+                        tempBoard[p.row - i + p.length][p.col] = '.';
+                        tempBoard[p.row - i][p.col] = p.id;
+                    }
+                }else{
+                    if (tempBoard[p.row + p.length-1+ i][p.col] == 'K' && p instanceof PrimaryPiece) {
+                        //TODO: Implement win
+                    }
+                    else if (!(tempBoard[p.row + p.length-1+ i][p.col] == '.')) {
+                        throw new IllegalArgumentException(
+                                "Piece hits something at (" + (p.row + p.length-1+ i) + "," + p.col + ")");
                     } else {
                         tempBoard[p.row + i - 1][p.col] = '.';
-                        tempBoard[p.row + i][p.col] = p.id;
+                        tempBoard[p.row + p.length-1+ i][p.col] = p.id;
                     }
                 }
             }
             // Move the piece if no collision
-            if (positive) {
-                p.row += distance;
-            } else {
-                p.row -= distance;
+            p.row += distance;
+            if (p.row < 0 || p.row >= this.height) {
+                throw new IndexOutOfBoundsException("Piece moved out of bounds.");
             }
             this.setBoard(tempBoard);
         }
