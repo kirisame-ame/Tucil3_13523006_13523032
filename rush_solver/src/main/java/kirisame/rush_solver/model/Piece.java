@@ -2,8 +2,8 @@ package kirisame.rush_solver.model;
 
 public class Piece {
     protected char id;
-    protected int height;
-    protected int width;
+    protected int length;
+    protected int axis;
     protected int row;
     protected int col;
 
@@ -11,47 +11,46 @@ public class Piece {
      *  Note: Piece row and col are set on the top-left corner of the piece.
      *  The row and col are the coordinates of the piece on the board.
      */
-    public Piece(char id, int height, int width, int row, int col) {
-        if (height <= 0 || width <= 0) {
-            throw new IllegalArgumentException("Height and width must be positive integers.");
+    public Piece(char id, int length, int axis, int row, int col) {
+        if (length <= 0) {
+            throw new IllegalArgumentException("Length must be a positive integer.");
         }
         if (row < 0 || col < 0) {
             throw new IllegalArgumentException("X and Y coordinates must be non-negative integers.");
         }
         this.id = id;
-        this.height = height;
-        this.width = width;
+        this.length = length;
+        this.axis = axis;
         this.row = row;
         this.col = col;
     }
     public int getId() {
         return id;
     }
-    public int getHeight() {
-        return height;
+    public int getLength() {
+        return length;
     }
-    public int getWidth() {
-        return width;
+    public int getAxis() {
+        return axis;
     }
-    public int getX() {
+    public int getRow() {
         return row;
     }
-    public int getY() {
+    public int getCol() {
         return col;
     }
     /**
      * Moves the piece in the specified direction.
-     * @param axis 0 for row, 1 for column
      * @param distance positive goes Right and Up, negative goes Left and Down
      */
-    public void move(int axis, int distance){
+    public void move(int distance){
         boolean positive = true;
         char[][] board = Board.getInstance().getBoard();
         if(distance <0){
             positive = false;
             distance = -distance;
         }
-        if(axis==0){
+        if(this.axis==0){
             for (int i = 0; i < distance; i++) {
                 if(positive){
                     if(board[this.row][this.col+i]=='K'){
@@ -71,7 +70,7 @@ public class Piece {
                 this.col -= distance;
             }
             Board.getInstance().setBoard(board);
-        }else if (axis==1){
+        }else if (this.axis==1){
             for (int i = 0; i < distance; i++) {
                 if(positive){
                     if(board[this.row+i][this.col]=='K'){
