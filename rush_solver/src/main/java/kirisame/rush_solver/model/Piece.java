@@ -55,7 +55,7 @@ public class Piece {
         if(this.axis==0){
             for (int i = 0; i < distance; i++) {
                 if(positive){
-                    if(board[this.row][this.col+i]=='K'){
+                    if(board[this.row][this.col+i]=='K' && this instanceof PrimaryPiece){
                         // TODO: Implement win
                     }else if(!(board[this.row][this.col+i] == '.')){
                         throw new IllegalArgumentException("Piece hits something at (" + this.row + "," + (this.col+i) + ")");
@@ -75,7 +75,7 @@ public class Piece {
         }else if (this.axis==1){
             for (int i = 0; i < distance; i++) {
                 if(positive){
-                    if(board[this.row+i][this.col]=='K'){
+                    if(board[this.row+i][this.col]=='K' && this instanceof PrimaryPiece){
                         // TODO: Implement win
                     }else if(!(board[this.row+i][this.col] == '.')){
                         throw new IllegalArgumentException("Piece hits something at (" + (this.row+i) + "," + this.col + ")");
