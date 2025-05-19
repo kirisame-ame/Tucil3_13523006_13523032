@@ -9,11 +9,15 @@ public class Node {
     private Board board;
     private Node parent;
     private int depth;
+    String heuristic;
+    private int heuristicValue;
 
-    public Node(Board board, Node parent, int depth) {
+    public Node(Board board, Node parent, int depth, String heuristic) {
         this.board = board.deepCopy();
         this.parent = parent;
         this.depth = depth;
+        this.heuristic = heuristic;
+        calculateCost();
     }
 
     public Board getBoard() {
@@ -27,7 +31,9 @@ public class Node {
     public int getDepth() {
         return depth;
     }
-
+    public int getHeuristicValue() {
+        return heuristicValue;
+    }
     /**
      * Expands the current node by checking all possible moves for each piece
      * 
@@ -43,9 +49,8 @@ public class Node {
             for (int dist = 1;; dist++) {
                 try {
                     Board newBoard = this.board.deepCopy();
-                    System.out.println("Trying to move piece " + piece.getId() + " by " + dist);
                     newBoard.move(piece, dist);
-                    nodes.add(new Node(newBoard, this, this.depth + 1));
+                    nodes.add(new Node(newBoard, this, this.depth + 1, this.heuristic));
                 } catch (Exception e) {
                     break; // Stop trying further in this direction
                 }
@@ -55,9 +60,8 @@ public class Node {
             for (int dist = -1;; dist--) {
                 try {
                     Board newBoard = this.board.deepCopy();
-                    System.out.println("Trying to move piece " + piece.getId() + " by " + dist);
                     newBoard.move(piece, dist);
-                    nodes.add(new Node(newBoard, this, this.depth + 1));
+                    nodes.add(new Node(newBoard, this, this.depth + 1, this.heuristic));
                 } catch (Exception e) {
                     break;
                 }
@@ -68,6 +72,15 @@ public class Node {
     }
 
     // Heuristics
+    private void calculateCost() {
+        switch (this.heuristic) {
+            case "blocking" -> {
+                this.heuristicValue = this.blockingPieces();
+            }
+            default -> throw new IllegalArgumentException("Invalid heuristic: " + heuristic);
+        }
+    }
+
     /**
      * Counts the number of pieces that are blocking the primary piece
      * 

@@ -10,6 +10,9 @@ public class Board {
     private int normalPieceCount;
     private int[] endGoal = new int[2];
     private HashMap<Character, Piece> pieces = new HashMap<>();
+    private boolean solved = false;
+    private static final char WALL = '壁';
+    private static final char EMPTY = ' ';
 
     public Board() {
         this.height = 0;
@@ -19,6 +22,7 @@ public class Board {
         this.endGoal[0] = 0;
         this.endGoal[1] = 0;
         this.pieces = new HashMap<>();
+        this.solved = false;
     }
 
     public int getHeight() {
@@ -62,7 +66,6 @@ public class Board {
     public int[] getEndGoal() {
         return endGoal;
     }
-
     public HashMap<Character, Piece> getPieces() {
         return pieces;
     }
@@ -73,6 +76,9 @@ public class Board {
             pieceIds.add(p.id);
         }
         return pieceIds;
+    }
+    public boolean isSolved() {
+        return solved;
     }
 
     /**
@@ -89,7 +95,7 @@ public class Board {
         // Initialize the board with walls
         for (int i = 0; i < height + 2; i++) {
             for (int j = 0; j < width + 2; j++) {
-                this.board[i][j] = '壁';
+                this.board[i][j] = WALL;
             }
         }
     }
@@ -131,7 +137,7 @@ public class Board {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 char value = board[i][j];
-                if (value != '壁' && value != ' ' && value != '.') {
+                if (value != WALL && value != EMPTY && value != '.') {
                     if(value == 'K') {
                         this.endGoal[0] = i;
                         this.endGoal[1] = j;
@@ -252,7 +258,7 @@ public class Board {
             for (int i = 1; i < distance; i++) {
                 if (positive) {
                     if (tempBoard[p.row][p.col+p.length - 1 + i] == 'K' && p instanceof PrimaryPiece) {
-                        // TODO: Implement win
+                        this.solved = true;
                     } else if (!(tempBoard[p.row][p.col+p.length-1 + i] == '.')) {
                         throw new IllegalArgumentException(
                                 "Piece hits something at (" + p.row + "," + (p.col+p.length-1 + i) + ")");
@@ -262,7 +268,7 @@ public class Board {
                     }
                 }else{
                     if (tempBoard[p.row][p.col - i] == 'K' && p instanceof PrimaryPiece) {
-                        //TODO: Implement win
+                        this.solved = true;
                     } else if (!(tempBoard[p.row][p.col - i] == '.')) {
                         throw new IllegalArgumentException(
                                 "Piece hits something at (" + p.row + "," + (p.col - i) + ")");
@@ -282,7 +288,7 @@ public class Board {
             for (int i = 1; i < distance; i++) {
                 if (positive) {
                     if (tempBoard[p.row- i][p.col] == 'K' && p instanceof PrimaryPiece) {
-                        // TODO: Implement win
+                        this.solved = true;
                     } else if (!(tempBoard[p.row - i][p.col] == '.')) {
                         throw new IllegalArgumentException(
                                 "Piece hits something at (" + (p.row - i) + "," + p.col + ")");
@@ -292,7 +298,7 @@ public class Board {
                     }
                 }else{
                     if (tempBoard[p.row + p.length-1+ i][p.col] == 'K' && p instanceof PrimaryPiece) {
-                        //TODO: Implement win
+                        this.solved = true;
                     }
                     else if (!(tempBoard[p.row + p.length-1+ i][p.col] == '.')) {
                         throw new IllegalArgumentException(

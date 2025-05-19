@@ -4,11 +4,11 @@ public class HNode extends Node {
 
     private int f;
 
-    public HNode(Node node, int h) {
+    public HNode(Node node, int h, String heuristic) {
 
         // f(n) = g(n) + h(n)
         // g(n) = depth
-        super(node.getBoard(), node.getParent(), node.getDepth());
+        super(node.getBoard(), node.getParent(), node.getDepth(), heuristic);
         this.f = node.getDepth() + h;
     }
 

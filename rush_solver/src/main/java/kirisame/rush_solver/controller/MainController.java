@@ -1,6 +1,7 @@
 package kirisame.rush_solver.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import kirisame.rush_solver.algorithm.GBFS;
 import kirisame.rush_solver.model.Board;
-
+import kirisame.rush_solver.model.Node;
 @RestController
 @RequestMapping("/api")
 public class MainController {
@@ -29,6 +31,12 @@ public class MainController {
             // Read file content as String (assuming text file)
             String content = new String(file.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
             Board rootBoard = ParserController.readFile(content);
+            Node rootNode = new Node(rootBoard, null, 0, "blocking");
+            // Perform GBFS algorithm
+            ArrayList<Node> solution = GBFS.solve(rootNode);
+            for (Node node : solution) {
+                System.out.println(node.getBoard().boardToString());
+            }
             return ResponseEntity.ok(rootBoard.boardToString());
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Failed to parse file: " + e.getMessage());
