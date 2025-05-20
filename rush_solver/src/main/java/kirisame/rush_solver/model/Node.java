@@ -114,6 +114,12 @@ public class Node {
             case "ucs" -> {
                 this.heuristicValue = 0;
             }
+            case "distance" -> {
+                this.heuristicValue = this.distanceToGoal(this);
+            }
+            case "distance+blocking" -> {
+                this.heuristicValue = this.distanceToGoal(this) + this.blockingPieces();
+            }
         }
     }
 
@@ -122,7 +128,8 @@ public class Node {
      * 
      * @param node the node to check
      * @return the number of blocking pieces
-     */    public int blockingPieces() {
+     */
+    public int blockingPieces() {
         int count = 0;
         int axis = this.board.getPieces().get('P').getAxis();
         int row = this.board.getPieces().get('P').getRow();
@@ -167,7 +174,7 @@ public class Node {
         } else {
             // For vertical primary piece
             int startRow = row + pieceLength - 1;
-            
+
             if (this.board.getEndGoal()[0] < startRow) {
                 // Need to move up
                 for (int i = startRow; i >= this.board.getEndGoal()[0]; i--) {
@@ -199,6 +206,17 @@ public class Node {
             }
         }
         return count;
+    }
+
+    private int distanceToGoal(Node node) {
+        Piece primary = node.getBoard().getPieces().get('P');
+        int[] goal = node.getBoard().getEndGoal();
+
+        if (primary.getAxis() == 0) {
+            return Math.abs(goal[1] - (primary.getCol() + primary.getLength() - 1));
+        } else {
+            return Math.abs(goal[0] - (primary.getRow() + primary.getLength() - 1));
+        }
     }
 
     public String getDirection() {
