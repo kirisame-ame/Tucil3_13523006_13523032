@@ -10,9 +10,6 @@ import kirisame.rush_solver.model.Node;
 
 public class Astar extends AbstractSearch {
 
-    // Board Solution Path
-    public ArrayList<Node> path;
-
     // Own Implementation of Prioqueue
     private PriorityQueue<HNode> open;
     private ArrayList<HNode> closed = new ArrayList<>();
@@ -24,7 +21,6 @@ public class Astar extends AbstractSearch {
      * @param heuristic
      * @return
      */
-    // TODO: REPLACE 'int heuristic' WITH HEURISTIC CLASS
     public Astar(Node startNode) {
 
         Comparator<HNode> comparator = Comparator.comparingInt(HNode::getF);
@@ -34,12 +30,16 @@ public class Astar extends AbstractSearch {
         HNode root = new HNode(startNode);
         open.add(root);
 
+        
+    }
+    @Override
+    public ArrayList<Node> solve() {
         while (!open.isEmpty()) {
             HNode current = open.poll();
 
             if (current.getBoard().isGoal()) {
                 buildPath(current);
-                return;
+                return path;
             }
 
             closed.add(current);
@@ -57,15 +57,7 @@ public class Astar extends AbstractSearch {
         }
 
         path = null; // No solution found
-    }
-
-    private void buildPath(Node goalNode) {
-        path = new ArrayList<>();
-        Node node = goalNode;
-        while (node != null) {
-            path.add(0, node); // prepend to list
-            node = node.getParent();
-        }
+        return path;
     }
 
     private void keepBetterNodeInOpen(HNode newNode) {
