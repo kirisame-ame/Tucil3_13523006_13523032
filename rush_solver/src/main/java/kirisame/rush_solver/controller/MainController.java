@@ -48,6 +48,10 @@ public class MainController {
             // perform A* algorithm
             Astar astar = new Astar(rootNode);
             ArrayList<Node> path = astar.solve();
+            if (path == null) {
+                System.out.println("No solution found");
+                return ResponseEntity.status(500).body("No solution found");
+            }
             for (Node node : path) {
                 node.pieceMovementInfo();
                 System.out.println(node.getBoard().boardToString());
