@@ -115,10 +115,10 @@ public class Node {
                 this.heuristicValue = 0;
             }
             case "distance" -> {
-                this.heuristicValue = this.distanceToGoal(this);
+                this.heuristicValue = this.distanceToGoal();
             }
             case "distance+blocking" -> {
-                this.heuristicValue = this.distanceToGoal(this) + this.blockingPieces();
+                this.heuristicValue = this.distanceToGoal() + this.blockingPieces();
             }
         }
     }
@@ -208,10 +208,14 @@ public class Node {
         return count;
     }
 
-    private int distanceToGoal(Node node) {
-        Piece primary = node.getBoard().getPieces().get('P');
-        int[] goal = node.getBoard().getEndGoal();
+    private int distanceToGoal() {
+        Piece primary = this.getBoard().getPieces().get('P');
+        int[] goal = this.getBoard().getEndGoal();
 
+        if (primary == null) {
+            System.out.println("Primary piece not found in the board.");
+            return 0;
+        }
         if (primary.getAxis() == 0) {
             return Math.abs(goal[1] - (primary.getCol() + primary.getLength() - 1));
         } else {
