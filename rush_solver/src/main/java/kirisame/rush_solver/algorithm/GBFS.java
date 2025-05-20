@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import kirisame.rush_solver.model.Node;
-public class GBFS {
+public class GBFS extends AbstractSearch {
     public static ArrayList<Node> solve(Node initNode){
         PriorityQueue<Node> openNodes = new PriorityQueue<>(Comparator.comparingInt(Node::getHeuristicValue));
         ArrayList<Node> movesTaken = new ArrayList<>();
@@ -14,13 +14,15 @@ public class GBFS {
             System.out.println("Current node: " + currentNode.getBoard().boardToString());
             System.out.println("Heuristic value: " + currentNode.getHeuristicValue());
             movesTaken.add(currentNode);
-            if (currentNode.getBoard().isSolved()){
+            if (currentNode.getBoard().isGoal()){
                 System.out.println("Found solution");
                 return movesTaken;
             }
             Node[] children = currentNode.expand();
             for (Node child : children){
-                if (!openNodes.contains(child)){
+                if (!containsBoard(openNodes, child) ){
+                    openNodes.add(child);
+                }else if(!containsBoard(movesTaken,child)){
                     openNodes.add(child);
                 }
             }

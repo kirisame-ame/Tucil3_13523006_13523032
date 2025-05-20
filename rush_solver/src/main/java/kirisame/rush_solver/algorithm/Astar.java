@@ -1,4 +1,4 @@
-package kirisame.rush_solver.model;
+package kirisame.rush_solver.algorithm;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,7 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class Astar {
+import kirisame.rush_solver.model.Board;
+import kirisame.rush_solver.model.HNode;
+import kirisame.rush_solver.model.Node;
+
+public class Astar extends AbstractSearch {
 
     // Board Solution Path
     public ArrayList<Board> path;
@@ -19,7 +23,7 @@ public class Astar {
      * Constructs and Solves the problem with class A*
      * 
      * @param startBoard
-     * @param heuristiic
+     * @param heuristic
      * @return
      */
     // TODO: REPLACE 'int heuristic' WITH HEURISTIC CLASS
@@ -64,15 +68,6 @@ public class Astar {
             path.add(0, node.getBoard()); // prepend to list
             node = node.getParent();
         }
-    }
-
-    private boolean containsBoard(Collection<HNode> list, HNode target) {
-        for (HNode node : list) {
-            if (node.getBoard().equals(target.getBoard())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void keepBetterNodeInOpen(HNode newNode) {
