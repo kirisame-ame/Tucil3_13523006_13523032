@@ -1,12 +1,9 @@
 import "./App.css";
 import { useState } from "react";
-import { useAppContext } from "./hooks/AppProvider";
 import FileUploader from "./components/FileUploader";
-import Combobox from "./components/ComboBox";
 import PathCarousel from "./components/carousel/PathCarousel";
 
 function App() {
-    const appContext = useAppContext();
     const [solutionData, setSolutionData] = useState<{
         algorithm: string;
         heuristic: string;
