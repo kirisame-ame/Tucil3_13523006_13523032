@@ -53,6 +53,9 @@ public class Node {
     public String getHeuristic() {
         return heuristic;
     }
+    public void setHeuristic(String heuristic) {
+        this.heuristic = heuristic;
+    }
 
     public char getMovedPiece() {
         return movedPiece;
@@ -117,7 +120,7 @@ public class Node {
             case "distance" -> {
                 this.heuristicValue = this.distanceToGoal();
             }
-            case "distance+blocking" -> {
+            case "blocking_distance" -> {
                 this.heuristicValue = this.distanceToGoal() + this.blockingPieces();
             }
         }

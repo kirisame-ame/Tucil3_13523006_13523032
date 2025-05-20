@@ -1,15 +1,55 @@
 import "./App.css";
 import { useState } from "react";
+import { useAppContext } from "./hooks/AppProvider";
 import FileUploader from "./components/FileUploader";
+import Combobox from "./components/ComboBox";
+import PathCarousel from "./components/carousel/PathCarousel";
 
 function App() {
-    const [message, setMessage] = useState("");
-    return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-900">
-            <h1 className="text-amber-400">Gurt: Yo</h1>
+    const appContext = useAppContext();
+    const [solutionData, setSolutionData] = useState<{
+        algorithm: string;
+        heuristic: string;
+        executionTime: number;
+        visitedNodes: number;
+        path: Array<{
+            board: string;
+            movement?: {
+                piece: string;
+                distance: number;
+                direction: string;
+            };
+        }>;
+    } | null>(null);
 
-            <p className="text-amber-400">{message}</p>
-            <FileUploader onUpload={setMessage} />
+    const handleSolutionFound = (data: typeof solutionData) => {
+        setSolutionData(data);
+    };
+
+    return (
+        <div className="flex flex-col bg-black items-center h-screen w-screen">
+            <div className="my-5 text-amber-400 text-center">
+                <h1 className="text-3xl font-bold">Rush Hour Puzzle Solver</h1>
+                <h1 className="text-amber-400">Gurt: Yo</h1>
+            </div>
+            <div className="flex min-w-full justify-center items-center">
+                <div className="">
+                    <FileUploader onSolutionFound={handleSolutionFound} />
+                </div>
+            </div>
+            {solutionData && (
+                <div className="text-white flex flex-col items-center ">
+                    <div>
+                        <p>
+                            Found solution with {solutionData.path.length} steps
+                        </p>
+                        <p>Time: {solutionData.executionTime}ms</p>
+                        <p>Nodes visited: {solutionData.visitedNodes}</p>
+                    </div>
+
+                    <PathCarousel slides={solutionData.path}></PathCarousel>
+                </div>
+            )}
         </div>
     );
 }
