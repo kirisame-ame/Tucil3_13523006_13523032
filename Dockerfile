@@ -7,14 +7,14 @@ COPY frontend/ ./
 RUN npm run build
 
 # Build backend
-FROM maven:3.9.6-eclipse-temurin-24-jammy AS backend-build
+FROM maven:3.9-eclipse-temurin-24-alpine AS backend-build
 WORKDIR /app
 COPY rush_solver/pom.xml ./
 COPY rush_solver/src ./src
 RUN mvn package -DskipTests
 
 # Final stage
-FROM eclipse-temurin:24-jre-jammy
+FROM eclipse-temurin:24-jre-alpine
 WORKDIR /app
 
 # Copy built artifacts
