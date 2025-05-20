@@ -3,6 +3,7 @@ package kirisame.rush_solver.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import kirisame.rush_solver.model.Board;
@@ -29,6 +30,7 @@ public class ParserController {
             int normalPieceCount = 0;
             HashSet<Character> pieceIds = new HashSet<>();
             String line;
+            ArrayList<String> tempBoard = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 lineCount++;
                 switch (lineCount) {
@@ -43,59 +45,61 @@ public class ParserController {
                         rootBoard.setPieceCount(normalPieceCount);
                     }
                     default -> {
-                        if(lineCount == 3 && line.charAt(0) != 'K' && line.charAt(0) !=' ') {
-                            int offset = 1;
-                            for (int i=0;i<rootBoard.getWidth()-1;i++) {
-                                try {
-                                    char value = line.charAt(i);
-                                    if(i==0 && (value=='K'||value=='k'|| value==' ')){
-                                      offset = 0;
-                                    }else{
-                                        value = Character.toUpperCase(value);
-                                    }
-                                    rootBoard.setBoardAt(1, i+offset,value);
-                                } catch (Exception e) {
-                                }
-                            }
-                            lineCount++;
-                            break;
-                        }
-                        if(line.length() > rootBoard.getWidth() - 1) {
-                            throw new IllegalArgumentException("Line length exceeds the specified width.");
-                        }
-                        if(lineCount > rootBoard.getHeight() + 3) {
-                            break;
-                        }
-                        if(normalPieceCount > rootBoard.getPieceCount()) {
-                            throw new IllegalArgumentException("Piece count exceeds the specified limit.");
-                        }
-                        int offset = 1;
-                        for(int i=0;i<rootBoard.getWidth()-1;i++) {
-                            try {
-                                char value = line.charAt(i);
-                                if(i==0 && (value=='K'||value=='k'|| value==' ')){
-                                    offset = 0;
-                                }
-                                // WIP IF K/EMPTY, no need i+1
-                                if(value>='a' && value<='Z') {
-                                    value = Character.toUpperCase(value);
-                                    if(value=='K'){
-                                        rootBoard.setEndGoal(lineCount - 3, i+offset);
-                                    }
-                                    if(value!='K'&& value!='P'){
-                                        if(pieceIds.add(value)){
-                                            normalPieceCount++;
-                                        }
-                                    }
-                                }
-                                if(value==' '){
-                                    value = '壁';
-                                }
-                                rootBoard.setBoardAt(lineCount - 3, i+offset, value);
-                            } catch (Exception e) {
-                            }
-                            
-                        }
+                        tempBoard.add(line);
+                    }
+                }
+            }
+            int exitRow = -1, exitCol = -1;
+            for (int i = 0; i < tempBoard.size(); i++) {
+                line = tempBoard.get(i);
+                for (int j = 0; j < line.length(); j++) {
+                    if (line.charAt(j) == 'K') {
+                        exitRow = i;
+                        exitCol = j;
+                        break;
+                    }
+                }
+                if (exitRow != -1)
+                    break;
+            }
+            if(exitRow==0){
+                // Exit on top row, need padding
+                int offset = 1;
+                rootBoard.setBoardAt(0, exitCol+offset, 'K');
+                for (int i = 1; i < tempBoard.size(); i++) {
+                    line = tempBoard.get(i);
+                    for (int j = 0; j < line.length(); j++) {
+                        rootBoard.setBoardAt(i, j+offset, line.charAt(j));
+                    }
+                }
+            }else if(exitRow==tempBoard.size()-1){
+                // Exit on bottom row, need padding
+                int offset = 1;
+                rootBoard.setBoardAt(rootBoard.getHeight()-1, exitCol+offset, 'K');
+                for (int i = 0; i < tempBoard.size()-1; i++) {
+                    line = tempBoard.get(i);
+                    for (int j = 0; j < line.length(); j++) {
+                        rootBoard.setBoardAt(i+1, j+offset, line.charAt(j));
+                    }
+                }
+            }else if(exitCol==0){
+                // Exit on left column, no need padding
+                int offset = 0;
+                rootBoard.setBoardAt(exitRow+1, 0, 'K');
+                for (int i = 0; i < tempBoard.size(); i++) {
+                    line = tempBoard.get(i);
+                    for (int j = 1; j < line.length(); j++) {
+                        rootBoard.setBoardAt(i+1, j+offset, line.charAt(j));
+                    }
+                }
+            }else if(exitCol==rootBoard.getWidth()-2){
+                // Exit on right column, no need padding
+                int offset = 1;
+                rootBoard.setBoardAt(exitRow+1, rootBoard.getWidth()-2, 'K');
+                for (int i = 0; i < tempBoard.size(); i++) {
+                    line = tempBoard.get(i);
+                    for (int j = 0; j < line.length(); j++) {
+                        rootBoard.setBoardAt(i+1, j+offset, line.charAt(j));
                     }
                 }
             }

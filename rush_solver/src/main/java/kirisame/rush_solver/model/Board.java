@@ -11,8 +11,9 @@ public class Board {
     private int[] endGoal = new int[2];
     private HashMap<Character, Piece> pieces = new HashMap<>();
     private boolean solved = false;
-    private static final char WALL = '©'; // fuck you @kirisame
-    private static final char EMPTY = ' ';
+    public static final char WALL = '©'; // fuck you @kirisame
+    public static final char EMPTY = ' ';
+    public static final char SPACE = '.';
 
     public Board() {
         this.height = 0;
