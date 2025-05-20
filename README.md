@@ -1,4 +1,4 @@
-# Tucil3_13523006_13523032
+# Rush Hour Puzzle Solver
 ## Deployed on https://rushsolver.kirisame.jp.net/
 ## Architecture
 Frontend is built using React + Vite, and Backend is build using Spring Boot
