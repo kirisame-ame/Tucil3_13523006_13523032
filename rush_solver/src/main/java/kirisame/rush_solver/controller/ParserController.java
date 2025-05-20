@@ -69,8 +69,8 @@ public class ParserController {
                         if(normalPieceCount > rootBoard.getPieceCount()) {
                             throw new IllegalArgumentException("Piece count exceeds the specified limit.");
                         }
+                        int offset = 1;
                         for(int i=0;i<rootBoard.getWidth()-1;i++) {
-                            int offset = 1;
                             try {
                                 char value = line.charAt(i);
                                 if(i==0 && (value=='K'||value=='k'|| value==' ')){
