@@ -13,6 +13,7 @@ public class Astar extends AbstractSearch {
     // Own Implementation of Prioqueue
     private PriorityQueue<HNode> open;
     private ArrayList<HNode> closed = new ArrayList<>();
+    private long executionTime;
 
     /**
      * Constructs and Solves the problem with class A*
@@ -30,15 +31,19 @@ public class Astar extends AbstractSearch {
         HNode root = new HNode(startNode);
         open.add(root);
 
-        
     }
+
     @Override
     public ArrayList<Node> solve() {
+
+        long startTime = System.nanoTime();
+
         while (!open.isEmpty()) {
             HNode current = open.poll();
 
             if (current.getBoard().isGoal()) {
                 buildPath(current);
+                executionTime = System.nanoTime() - startTime; // Stop timing
                 return path;
             }
 
@@ -56,7 +61,9 @@ public class Astar extends AbstractSearch {
             }
         }
 
+        System.out.println("No solution found");
         path = null; // No solution found
+        executionTime = System.nanoTime() - startTime; // Stop timing
         return path;
     }
 
@@ -82,8 +89,25 @@ public class Astar extends AbstractSearch {
         open.addAll(tempList); // rebuild the queue
     }
 
-    public ArrayList<Node> getPath() {
-        return path;
+    /**
+     * get visited nodes count
+     * 
+     * @return the number of visited nodes
+     */
+    public int getNodeCount() {
+        return open.size() + closed.size();
     }
+
+    public long getExecutionTime() {
+        return executionTime;
+    }
+
+    public long getExecutionTimeInMillis() {
+        return executionTime / 1_000_000; // Convert to milliseconds
+    }
+
+    // public ArrayList<Node> getPath() {
+    // return path;
+    // }
 
 }

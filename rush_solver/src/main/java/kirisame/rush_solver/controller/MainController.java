@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import kirisame.rush_solver.algorithm.GBFS;
+import kirisame.rush_solver.algorithm.Astar;
 import kirisame.rush_solver.model.Board;
 import kirisame.rush_solver.model.Node;
 
@@ -35,23 +35,25 @@ public class MainController {
             Board rootBoard = ParserController.readFile(content);
             Node rootNode = new Node(rootBoard, null, 0, "blocking");
             // Perform GBFS algorithm
-            GBFS gbfs = new GBFS(rootNode);
-            ArrayList<Node> solution = gbfs.solve();
-            int i = 0;
-            for (Node node : solution) {
-                node.pieceMovementInfo();
-                System.out.println("Step " + i + ":");
-                i++;
-            System.out.println(node.getBoard().boardToString());
-            }
+            // GBFS gbfs = new GBFS(rootNode);
+            // ArrayList<Node> solution = gbfs.solve();
+            // int i = 0;
+            // for (Node node : solution) {
+            // node.pieceMovementInfo();
+            // System.out.println("Step " + i + ":");
+            // i++;
+            // System.out.println(node.getBoard().boardToString());
+            // }
 
             // perform A* algorithm
-            // Astar astar = new Astar(rootNode);
-            // ArrayList<Node> path = astar.path;
-            // for (Node node : path) {
-            //     node.pieceMovementInfo();
-            //     System.out.println(node.getBoard().boardToString());
-            // }
+            Astar astar = new Astar(rootNode);
+            ArrayList<Node> path = astar.solve();
+            for (Node node : path) {
+                node.pieceMovementInfo();
+                System.out.println(node.getBoard().boardToString());
+            }
+            System.out.println("Execution time: " + astar.getExecutionTimeInMillis() + " ms");
+            System.out.println("Visited nodes: " + astar.getNodeCount());
 
             return ResponseEntity.ok(rootBoard.boardToString());
         } catch (IOException e) {
