@@ -103,11 +103,17 @@ public class Node {
 
     // Heuristics
     private void calculateCost() {
-        switch (this.heuristic) {
+        switch (this.heuristic.toLowerCase()) {
             case "blocking" -> {
                 this.heuristicValue = this.blockingPieces();
             }
             default -> throw new IllegalArgumentException("Invalid heuristic: " + heuristic);
+            case "none" -> {
+                this.heuristicValue = 0;
+            }
+            case "ucs" -> {
+                this.heuristicValue = 0;
+            }
         }
     }
 
