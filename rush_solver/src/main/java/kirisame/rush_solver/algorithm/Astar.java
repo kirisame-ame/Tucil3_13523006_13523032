@@ -1,19 +1,17 @@
 package kirisame.rush_solver.algorithm;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import kirisame.rush_solver.model.Board;
 import kirisame.rush_solver.model.HNode;
 import kirisame.rush_solver.model.Node;
 
 public class Astar extends AbstractSearch {
 
     // Board Solution Path
-    public ArrayList<Board> path;
+    public ArrayList<Node> path;
 
     // Own Implementation of Prioqueue
     private PriorityQueue<HNode> open;
@@ -27,12 +25,12 @@ public class Astar extends AbstractSearch {
      * @return
      */
     // TODO: REPLACE 'int heuristic' WITH HEURISTIC CLASS
-    public Astar(Board initialBoard, String heuristic) {
+    public Astar(Node startNode) {
 
         Comparator<HNode> comparator = Comparator.comparingInt(HNode::getF);
         open = new PriorityQueue<>(comparator);
 
-        Node startNode = new Node(initialBoard.deepCopy(), null, 0, heuristic);
+        // Node startNode = new Node(initialBoard.deepCopy(), null, 0, heuristic);
         HNode root = new HNode(startNode);
         open.add(root);
 
@@ -65,7 +63,7 @@ public class Astar extends AbstractSearch {
         path = new ArrayList<>();
         Node node = goalNode;
         while (node != null) {
-            path.add(0, node.getBoard()); // prepend to list
+            path.add(0, node); // prepend to list
             node = node.getParent();
         }
     }
@@ -90,6 +88,10 @@ public class Astar extends AbstractSearch {
         }
 
         open.addAll(tempList); // rebuild the queue
+    }
+
+    public ArrayList<Node> getPath() {
+        return path;
     }
 
 }
