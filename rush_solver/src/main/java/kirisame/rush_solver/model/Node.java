@@ -122,21 +122,27 @@ public class Node {
      * 
      * @param node the node to check
      * @return the number of blocking pieces
-     */
-    public int blockingPieces() {
+     */    public int blockingPieces() {
         int count = 0;
         int axis = this.board.getPieces().get('P').getAxis();
         int row = this.board.getPieces().get('P').getRow();
         int col = this.board.getPieces().get('P').getCol();
+        int pieceLength = this.board.getPieces().get('P').getLength();
         HashSet<Character> visitedPieces = new HashSet<>();
+
+        // For horizontal primary piece
         if (axis == 0) {
-            if (this.board.getEndGoal()[0] < row) {
-                for (int i = row; i >= this.board.getEndGoal()[0]; i--) {
-                    char value = this.board.getBoard()[i][col];
+            // Get rightmost position of the piece
+            int startCol = col + pieceLength - 1;
+
+            if (this.board.getEndGoal()[1] < startCol) {
+                // Need to move left
+                for (int i = startCol; i >= this.board.getEndGoal()[1]; i--) {
+                    char value = this.board.getBoard()[row][i];
                     if (value == 'K') {
                         break;
                     }
-                    if (value >= 'A' && value <= 'Z') {
+                    if (value >= 'A' && value <= 'Z' && value != 'P') {
                         if (!visitedPieces.contains(value)) {
                             count++;
                             visitedPieces.add(value);
@@ -144,12 +150,13 @@ public class Node {
                     }
                 }
             } else {
-                for (int i = row; i <= this.board.getEndGoal()[0]; i++) {
-                    char value = this.board.getBoard()[i][col];
+                // Need to move right
+                for (int i = startCol; i <= this.board.getEndGoal()[1]; i++) {
+                    char value = this.board.getBoard()[row][i];
                     if (value == 'K') {
                         break;
                     }
-                    if (value >= 'A' && value <= 'Z') {
+                    if (value >= 'A' && value <= 'Z' && value != 'P') {
                         if (!visitedPieces.contains(value)) {
                             count++;
                             visitedPieces.add(value);
@@ -157,15 +164,18 @@ public class Node {
                     }
                 }
             }
-
         } else {
-            if (this.board.getEndGoal()[1] < col) {
-                for (int i = col; i >= this.board.getEndGoal()[1]; i--) {
-                    char value = this.board.getBoard()[row][i];
+            // For vertical primary piece
+            int startRow = row + pieceLength - 1;
+            
+            if (this.board.getEndGoal()[0] < startRow) {
+                // Need to move up
+                for (int i = startRow; i >= this.board.getEndGoal()[0]; i--) {
+                    char value = this.board.getBoard()[i][col];
                     if (value == 'K') {
                         break;
                     }
-                    if (value >= 'A' && value <= 'Z') {
+                    if (value >= 'A' && value <= 'Z' && value != 'P') {
                         if (!visitedPieces.contains(value)) {
                             count++;
                             visitedPieces.add(value);
@@ -173,12 +183,13 @@ public class Node {
                     }
                 }
             } else {
-                for (int i = col; i <= this.board.getEndGoal()[1]; i++) {
-                    char value = this.board.getBoard()[row][i];
+                // Need to move down
+                for (int i = startRow; i <= this.board.getEndGoal()[0]; i++) {
+                    char value = this.board.getBoard()[i][col];
                     if (value == 'K') {
                         break;
                     }
-                    if (value >= 'A' && value <= 'Z') {
+                    if (value >= 'A' && value <= 'Z' && value != 'P') {
                         if (!visitedPieces.contains(value)) {
                             count++;
                             visitedPieces.add(value);
@@ -186,9 +197,7 @@ public class Node {
                     }
                 }
             }
-
         }
-
         return count;
     }
 
