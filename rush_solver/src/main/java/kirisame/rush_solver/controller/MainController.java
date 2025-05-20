@@ -75,7 +75,9 @@ public class MainController {
                 errorResponse.put("error", "No solution found");
                 return ResponseEntity.status(500).body(errorResponse);
             }
-
+            // for (Node node:path){
+            //     System.out.println(node.getBoard().boardToString());
+            // }
             Map<String, Object> response = new HashMap<>();
             response.put("algorithm", algorithm);
             response.put("heuristic", heuristic);

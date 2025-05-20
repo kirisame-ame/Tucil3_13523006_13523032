@@ -27,7 +27,7 @@ const PathCarousel: React.FC<PropType> = (props) => {
     const { slides, options } = props;
     const progressNode = useRef<HTMLDivElement>(null);
     const [emblaRef, emblaApi] = useEmblaCarousel(options, [
-        Autoplay({ playOnInit: false, delay: 3000 }),
+        Autoplay({ playOnInit: false, delay: 2000, stopOnInteraction: false }),
     ]);
 
     const {
@@ -42,7 +42,7 @@ const PathCarousel: React.FC<PropType> = (props) => {
 
     const { showAutoplayProgress } = useAutoplayProgress(
         emblaApi,
-        progressNode,
+        progressNode as React.RefObject<HTMLDivElement>,
     );
 
     return (

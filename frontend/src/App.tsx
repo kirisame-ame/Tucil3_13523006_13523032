@@ -21,22 +21,30 @@ function App() {
             };
         }>;
     } | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleSolutionFound = (data: typeof solutionData) => {
+    const handleSolutionFound = (
+        data: typeof solutionData,
+        err: string | null,
+    ) => {
         setSolutionData(data);
+        setError(err);
     };
 
     return (
-        <div className="flex flex-col bg-black items-center h-screen w-screen">
-            <div className="my-5 text-amber-400 text-center">
+        <div className="flex flex-col bg-black min-h-screen items-center">
+            <div className="my-5 text-amber-400 items-center text-center">
                 <h1 className="text-3xl font-bold">Rush Hour Puzzle Solver</h1>
                 <h1 className="text-amber-400">Gurt: Yo</h1>
             </div>
             <div className="flex min-w-full justify-center items-center">
-                <div className="">
-                    <FileUploader onSolutionFound={handleSolutionFound} />
-                </div>
+                <FileUploader onSolutionFound={handleSolutionFound} />
             </div>
+            {error && (
+                <div className="flex text-red-500 items-center text-center mt-4">
+                    <p>{error}</p>
+                </div>
+            )}
             {solutionData && (
                 <div className="text-white flex flex-col items-center ">
                     <div>

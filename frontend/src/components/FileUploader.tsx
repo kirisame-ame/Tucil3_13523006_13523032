@@ -20,6 +20,7 @@ interface FileUploaderProps {
                 };
             }>;
         } | null,
+        err: string | null,
     ) => void;
 }
 
@@ -30,11 +31,11 @@ export default function FileUploader({ onSolutionFound }: FileUploaderProps) {
     const handleUpload = async () => {
         const file = fileRef.current?.files?.[0];
         if (!file) {
-            onSolutionFound?.(null);
+            onSolutionFound?.(null, "Please select a file.");
             return;
         }
         if (!file.name.toLowerCase().endsWith(".txt")) {
-            onSolutionFound?.(null);
+            onSolutionFound?.(null, "Please select a .txt file.");
             return;
         }
         const formData = new FormData();
@@ -54,12 +55,15 @@ export default function FileUploader({ onSolutionFound }: FileUploaderProps) {
             });
             const data = await res.json();
             if (res.ok) {
-                onSolutionFound?.(data);
+                onSolutionFound?.(data, null);
             } else {
-                onSolutionFound?.(null);
+                onSolutionFound?.(null, data.error);
             }
         } catch (err) {
-            onSolutionFound?.(null);
+            onSolutionFound?.(
+                null,
+                "An error occurred while uploading the file.",
+            );
         }
     };
 
@@ -69,7 +73,7 @@ export default function FileUploader({ onSolutionFound }: FileUploaderProps) {
                 Puzzle txt file
             </Label>
             <Input id="picture" type="file" ref={fileRef} />
-            <div className="flex flex-row gap-x-2 justify-center">
+            <div className="flex flex-row justify-center gap-x-2">
                 <Combobox
                     param="algorithm"
                     options={

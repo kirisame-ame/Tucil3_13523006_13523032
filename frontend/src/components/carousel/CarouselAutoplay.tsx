@@ -17,10 +17,7 @@ export const useAutoplay = (
             const autoplay = emblaApi?.plugins()?.autoplay;
             if (!autoplay) return;
 
-            const resetOrStop =
-                autoplay.options.stopOnInteraction === false
-                    ? autoplay.reset
-                    : autoplay.stop;
+            const resetOrStop = autoplay.reset;
 
             resetOrStop();
             callback();

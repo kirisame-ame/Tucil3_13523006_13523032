@@ -1,5 +1,5 @@
 .embla {
-    max-width: 30rem;
+    max-width: 40rem;
     margin: auto;
     --slide-height: 10rem;
     --slide-spacing: 1rem;
@@ -16,7 +16,7 @@
 .embla__slide {
     transform: translate3d(0, 0, 0);
     flex: 0 0 var(--slide-size);
-    min-width: 0;
+    min-width: 10;
     padding-left: var(--slide-spacing);
 }
 .embla__slide__number {
@@ -31,11 +31,11 @@
     user-select: none;
 }
 .embla__controls {
-    display: grid;
+    display: flex;
     grid-template-columns: auto 1fr;
-    justify-content: space-between;
+    justify-content: center;
     gap: 1.2rem;
-    margin-top: 1.8rem;
+    margin-bottom: 1.8rem;
 }
 .embla__buttons {
     display: grid;
