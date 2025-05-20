@@ -8,7 +8,8 @@ public class HNode extends Node {
 
         // f(n) = g(n) + h(n)
         // g(n) = depth
-        super(node.getBoard(), node.getParent(), node.getDepth(), node.heuristic);
+        super(node.getBoard(), node.getParent(), node.getDepth(), node.heuristic, node.getMovedPiece(),
+                node.getMoveDistance());
         this.f = node.getDepth() + this.getHeuristicValue();
     }
 

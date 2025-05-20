@@ -11,6 +11,18 @@ public class Node {
     private int depth;
     String heuristic;
     private int heuristicValue;
+    private char movedPiece;
+    private int moveDistance;
+
+    public Node(Board board, Node parent, int depth, String heuristic, char movedPiece, int moveDistance) {
+        this.board = board.deepCopy();
+        this.parent = parent;
+        this.depth = depth;
+        this.heuristic = heuristic;
+        calculateCost();
+        this.movedPiece = movedPiece;
+        this.moveDistance = moveDistance;
+    }
 
     public Node(Board board, Node parent, int depth, String heuristic) {
         this.board = board.deepCopy();
@@ -18,6 +30,8 @@ public class Node {
         this.depth = depth;
         this.heuristic = heuristic;
         calculateCost();
+        this.movedPiece = '-';
+        this.moveDistance = 0;
     }
 
     public Board getBoard() {
@@ -34,6 +48,18 @@ public class Node {
 
     public int getHeuristicValue() {
         return heuristicValue;
+    }
+
+    public String getHeuristic() {
+        return heuristic;
+    }
+
+    public char getMovedPiece() {
+        return movedPiece;
+    }
+
+    public int getMoveDistance() {
+        return moveDistance;
     }
 
     /**
@@ -53,7 +79,7 @@ public class Node {
                     Board newBoard = this.board.deepCopy();
                     Piece copiedPiece = newBoard.getPieces().get(piece.getId());
                     newBoard.move(copiedPiece, dist);
-                    nodes.add(new Node(newBoard, this, this.depth + 1, this.heuristic));
+                    nodes.add(new Node(newBoard, this, this.depth + 1, this.heuristic, piece.getId(), dist));
                 } catch (Exception e) {
                     break; // Stop trying further in this direction
                 }
@@ -65,7 +91,7 @@ public class Node {
                     Board newBoard = this.board.deepCopy();
                     Piece copiedPiece = newBoard.getPieces().get(piece.getId());
                     newBoard.move(copiedPiece, dist);
-                    nodes.add(new Node(newBoard, this, this.depth + 1, this.heuristic));
+                    nodes.add(new Node(newBoard, this, this.depth + 1, this.heuristic, piece.getId(), dist));
                 } catch (Exception e) {
                     break;
                 }
@@ -158,5 +184,29 @@ public class Node {
         }
 
         return count;
+    }
+
+    public String getDirection() {
+        Piece moved = this.board.getPieces().get(this.movedPiece);
+        if (moved == null) {
+            System.out.println("Moved piece not found in the board.");
+            return "";
+        }
+        int axis = moved.getAxis();
+        if (axis == 0) {
+            return (this.moveDistance < 0 ? "LEFT" : "RIGHT");
+        } else {
+            return (this.moveDistance < 0 ? "UP" : "DOWN");
+        }
+    }
+
+    public void pieceMovementInfo() {
+        if (this.movedPiece == '-') {
+            System.out.println("No piece moved, this is the root node.");
+            return;
+        }
+        System.out.print("Piece: " + this.movedPiece);
+        System.out.print(", MoveDistance: " + Math.abs(this.moveDistance));
+        System.out.println(", Direction: " + this.getDirection());
     }
 }

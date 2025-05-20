@@ -44,6 +44,7 @@ public class MainController {
             Astar astar = new Astar(rootNode);
             ArrayList<Node> path = astar.path;
             for (Node node : path) {
+                node.pieceMovementInfo();
                 System.out.println(node.getBoard().boardToString());
             }
 
