@@ -33,6 +33,7 @@ Frontend is built using React + Vite, and Backend is build using Spring Boot
 - ```docs``` : Course report document
 ## How to run
 - run ```backend.cmd``` for the spring boot backend,
+- or ```mvnw spring-boot:run``` in ```/rush_solver```
 - ```npm run dev``` in ```/frontend``` to run the React Frontend
 ## Authors
 | Name | NIM | Class |
