@@ -25,9 +25,6 @@ public class GBFS extends AbstractSearch {
 
         while (!open.isEmpty()) {
             Node currentNode = open.poll();
-            if (currentNode.getDepth() < 3) {
-                System.out.println(currentNode.getBoard().boardToString());
-            }
             closed.add(currentNode);
             if (currentNode.getBoard().isGoal()) {
                 System.out.println("Found solution");

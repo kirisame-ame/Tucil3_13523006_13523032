@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kirisame.rush_solver.algorithm.Astar;
 import kirisame.rush_solver.algorithm.GBFS;
+import kirisame.rush_solver.algorithm.TwoGreedy;
 import kirisame.rush_solver.model.Board;
 import kirisame.rush_solver.model.Node;
 
@@ -62,6 +63,12 @@ public class MainController {
                     path = astar.solve();
                     executionTime = astar.getExecutionTimeInMillis();
                     visitedNodes = astar.getNodeCount();
+                }
+                case "twogreed"->{
+                    TwoGreedy twogreed = new TwoGreedy(rootNode);
+                    path = twogreed.solve();
+                    executionTime = twogreed.getExecutionTimeInMillis();
+                    visitedNodes = twogreed.getNodeCount();
                 }
                 default -> {
                     Map<String, Object> errorResponse = new HashMap<>();

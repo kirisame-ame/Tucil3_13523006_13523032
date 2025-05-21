@@ -81,6 +81,7 @@ export default function FileUploader({ onSolutionFound }: FileUploaderProps) {
                             ["A*", "astar"],
                             ["GBFS", "gbfs"],
                             ["UCS", "ucs"],
+                            ["Two Greedy", "twogreed"],
                         ])
                     }
                 ></Combobox>
