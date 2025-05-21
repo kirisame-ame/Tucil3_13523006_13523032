@@ -2,6 +2,7 @@
 A solver website for https://en.wikipedia.org/wiki/Rush_Hour_(puzzle)
 ## Deployed on https://rushsolver.kirisame.jp.net/
 ## Input .txt file format
+Check ```/tests``` for more examples
 ```
 6 6
 11
@@ -32,7 +33,7 @@ Frontend is built using React + Vite, and Backend is build using Spring Boot
 - ```docs``` : Course report document
 ## How to run
 - run ```backend.cmd``` for the spring boot backend,
-- ```npm run dev``` in /frontend to run the React Frontend
+- ```npm run dev``` in ```/frontend``` to run the React Frontend
 ## Authors
 | Name | NIM | Class |
 |------|---|---|
