@@ -1,6 +1,24 @@
 # Rush Hour Puzzle Solver
 A solver website for https://en.wikipedia.org/wiki/Rush_Hour_(puzzle)
 ## Deployed on https://rushsolver.kirisame.jp.net/
+## Input .txt file format
+```
+6 6
+11
+AAB..F
+..BCDF
+GPPCDFK
+GH.III
+GHJ...
+LLJMM.
+```
+- First Row is board size A x B
+- Second is non Primary Piece count
+- Primary Piece is denoted with P
+- End Goal with K
+- Moveable space with .
+- And other pieces with other letters
+- DO NOT INPUT THE WALL
 ## Architecture
 Frontend is built using React + Vite, and Backend is build using Spring Boot
 ## Built with
